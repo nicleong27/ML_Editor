@@ -66,3 +66,31 @@ def plot_bar_chart(x, y, title, xlabel, ylabel):
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
     plt.tight_layout()
+
+def plot_horizontal_bar_chart(x, y, title, xlabel, ylabel):
+    '''
+    Plots bar chart
+
+    Parameters
+    ----------
+    x : pandas series
+    y : pandas series
+    title: string
+    xlabel: string
+    ylabel: string
+
+    Returns:
+    --------
+    None
+    '''
+    
+    fig, ax = plt.subplots(figsize=(10,7))
+
+    plt.barh(x, y, color='dodgerblue')
+    plt.title(title, fontsize=25)
+    ax.set_xlabel(xlabel, fontsize=20)
+    ax.set_ylabel(ylabel, fontsize=20)
+    ax.invert_yaxis()
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.tight_layout()
