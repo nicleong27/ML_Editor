@@ -11,14 +11,15 @@ from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 
-from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, roc_curve, auc, precision_recall_curve
+from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, roc_curve, auc, precision_recall_curve, roc_auc_score
 
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
 import seaborn as sns
+sns.set_style('darkgrid')
 
-def get_conf_matrix(y_test, y_pred):
+def get_conf_matrix(y_test, y_pred, ax):
     '''
     Creates confusion matrix
     
@@ -40,13 +41,13 @@ def get_conf_matrix(y_test, y_pred):
     df_cm = pd.DataFrame(cm_flip2, index=('Correct', 'Incorrect'), 
                                     columns=('Correct', 'Incorrect'))
 
-    fig, ax = plt.subplots(figsize=(10,7))
+    # fig, ax = plt.subplots(figsize=(10,7))
     sns.set(font_scale=1.4)
-    sns.heatmap(df_cm, annot=True, fmt='g', cmap='Blues')
+    sns.heatmap(df_cm, annot=True, fmt='g', cmap='Blues', ax=ax)
 
     ax.set_xlabel('Predicted')
     ax.set_ylabel('Actual')
-    ax.set_title('Confusion Matrix')
+    ax.set_title('Confusion Matrix', fontsize=25)
 
 def print_acc_prec_recall(y_test, y_pred):
     '''
@@ -92,7 +93,8 @@ def plot_roc_curve(y_hat, y_test, classifier):
     roc_auc = auc(fpr, tpr)
     # plot precision ROC curve
     
-    plt.plot(fpr, tpr, marker='.', label=classifier + ', AUC: %0.2f' % roc_auc, 
+    plt.plot(fpr, tpr, marker='.', label=classifier.__class__.__name__ + 
+                                    ', AUC: %0.2f' % roc_auc, 
                                     color='dodgerblue')
     
     plt.title('ROC Curve', fontsize=25)
@@ -140,6 +142,47 @@ def plot_prec_recall(y_hat, y_test):
     plt.yticks(fontsize=15)
     plt.legend()
     plt.tight_layout()
+
+def plot_multiple_rocs(model_list, color_list, X_train, y_train, X_test, y_test):
+        '''
+        Plots multiple ROC curves for model comparison
+
+        Parameters
+        ----------
+        model_list : lst
+            List of models looking to compare
+        text_series : pandas series
+            Pandas series of text
+        y : pandas series 
+            Y labels
+        vectorizer : vectorizer function
+        ax : axis in plt.subplots()
+
+        Returns:
+        --------
+        None
+        '''
+        fig, ax = plt.subplots(figsize=(10,7))
+        plt.plot([0,1],[0,1], 'k', label="random")
+        for i, model in enumerate(model_list):
+            model.fit(X_train, y_train)
+            y_pred = model.predict(X_test)
+            y_hat = model.predict_proba(X_test)[:, 1]
+            fpr, tpr, _ = roc_curve(y_test, y_hat)
+            roc_auc = auc(fpr, tpr)
+            plt.plot(fpr, tpr, marker='.', label=model.__class__.__name__ + 
+                                    ', AUC: %0.2f' % roc_auc, 
+                                    color=color_list[i])
+
+        plt.title('ROC Curve', fontsize=25)
+        ax.set_xlabel('False Positive Rate', fontsize=20)
+        ax.set_ylabel('True Positive Rate', fontsize=20)
+        
+        plt.xticks(fontsize=15)
+        plt.yticks(fontsize=15)
+        plt.legend()
+        plt.tight_layout()
+            
 
 def tweak_tresholds(thresholds, X_test, y_test, model):
     '''
