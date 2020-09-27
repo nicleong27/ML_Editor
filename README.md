@@ -16,7 +16,7 @@ After cleaning the text, I first removed any emojis after discovering these made
 I noticed that bi-grams provided more contextual information instead of uni-grams and a clearer distinction of different topics than tri-grams based off of the worldclouds below.
 
 <p align="center">
-    <img src="./imgs/bigrams_wordcloud.png" width=500, hspace=20>
+    <img src="./imgs/bigrams_wordcloud.png" width=500>
     <img src="./imgs/trigrams_wordcloud.png", width=500>
 </p>
 
@@ -24,7 +24,7 @@ The top 10 most frequent bi-grams show the variability in topics during the mont
 https://www.bloomberg.com/news/features/2020-05-22/elon-musk-speaks-frankly-on-coronavirus-spacex-and-rage-tweets
 
 <p align="center">
-    <img src="./imgs/top_10_bigrams.png">
+    <img src="./imgs/top_10_bigrams.png", width=500>
 </p>
 
 ## Modelling:
@@ -51,7 +51,7 @@ After testing different types of ML Algorithms, the best model was a Logistic Re
 The treshold level was tweaked to see if further improvement in precision was possible. The final threshold value was increased from 0.5 to 0.8 as this resulted in the highest precision score. It's interesting to note that there was a tradeoff between precision and recall, where the precision score only marginally improved from threshold value 0.75 and up, while the recall score declined significantly.
 
 <p align="center">
-    <img src="./imgs/final_model_prec_recall_tradeoff.png">
+    <img src="./imgs/final_model_prec_recall_tradeoff.png", width=500>
 </p>
 
 Below are the two confusion matrices with 0.5 and 0.8 thresholds, respectively.
